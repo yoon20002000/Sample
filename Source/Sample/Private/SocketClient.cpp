@@ -7,6 +7,11 @@
 #include "Interfaces/IPv4/IPv4Address.h"
 #include "Interfaces/IPv4/IPv4Endpoint.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "NetworkDefines.h"
+
+USocketClient::USocketClient() : SocketClient(nullptr), Listener(nullptr), DataBuffer(MakeUnique<UBytesBuffer>()) 
+{
+}
 
 bool USocketClient::Open(const FString& InIpAddress, const int32 InPort)
 {
@@ -63,24 +68,41 @@ void USocketClient::OnTick()
 				int32 BytesRead = 0;
 				if(SocketClient->Recv(Bytes.GetData(), PendingData,BytesRead))
 				{
-					// 여기에 내 버퍼 일단 넣고
-					FString Message = "";
-					FMemoryReader MemoryReader(Bytes);
-					MemoryReader << Message;
+					DataBuffer->AddData(Bytes);
 
 					while (true)
 					{
-						// 처리 가능한지 확인 해서
-						if(true)
+						if(DataBuffer->CanProcessPacket())
 						{
-							// 다 못받은 거면 나머지 받을 때 까지 대기
 							break;
 						}
 
-						// 이후 데이터 처리
-						
+						{
+							const uint8* Pivot = Bytes.GetData();
 
-						// 데이터 처리 하다가 에러나는거 어떻게 처리할 지 고민 해야 됨.
+							uint16 InComePacketSize;
+							std::memcpy(&InComePacketSize, Pivot, PacketTotalSize);
+							// Set Little indian 
+							InComePacketSize = (InComePacketSize << BitSweepSize) | (InComePacketSize >> BitSweepSize);
+
+							Pivot += PacketTotalSize;
+
+							// msg id
+							uint16 InComePacketID;
+							std::memcpy(&InComePacketID, Pivot, PacketMsgIdSize);
+							// Set Little indian
+							InComePacketID = (InComePacketID << BitSweepSize) | (InComePacketID >> BitSweepSize);
+
+							Pivot += PacketMsgIdSize;
+
+							TArray<uint8> PacketData;
+							PacketData.Append(Pivot, Bytes.Num() - PacketTotalSize - PacketMsgIdSize);
+
+							FNetReceiveResult Packet(InComePacketSize, PacketData);
+
+							ReceivedPackets.Enqueue(Packet);
+						}
+						
 					}
 				}
 			}
