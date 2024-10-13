@@ -27,12 +27,15 @@ private:
 	const size_t PacketMsgIdSize = sizeof(uint16);
 	unsigned long long BitSweepSize = sizeof(uint8);
 	TQueue<FNetReceiveResult> ReceivedPackets;
-	
+
+	bool bIsConnected = false;
+	bool bIsLogined = false;
 public:
-	bool Open(const FString& InIpAddress, const int32 InPort);
+	void Connect(const FString& InIpAddress, const int32 InPort);
+	bool Dispatch();
 	void Close();
 private:
-	void Connect(const FString& InIpAddress, const int32 InPort);
 	bool OnConnectedCallback(FSocket* InSocket, const FIPv4Endpoint& InFiPv4Endpoint);
-	void OnTick();
+	void OnReadCallback();
+	void SendPacket(const TArray<uint8>& InData) const;
 };

@@ -13,7 +13,7 @@ USocketClient::USocketClient() : SocketClient(nullptr), Listener(nullptr), DataB
 {
 }
 
-bool USocketClient::Open(const FString& InIpAddress, const int32 InPort)
+bool USocketClient::Dispatch()
 {
 	return true;
 }
@@ -29,6 +29,9 @@ void USocketClient::Close()
 	{
 		SocketClient.Reset();
 	}
+
+	bIsConnected = false;
+	bIsLogined = false;
 }
 
 void USocketClient::Connect(const FString& InIpAddress, const int32 InPort)
@@ -47,6 +50,8 @@ bool USocketClient::OnConnectedCallback(FSocket* InSocket, const FIPv4Endpoint& 
 {
 	UKismetSystemLibrary::PrintString(GetWorld(), "Connected!!");
 
+	bIsConnected = true;
+	
 	// 받아 처리하는거 넣어야됨
 	// set timer로 설정 필요 예상
 	// login 요청 추가 필요 
@@ -54,7 +59,7 @@ bool USocketClient::OnConnectedCallback(FSocket* InSocket, const FIPv4Endpoint& 
 	return true;
 }
 
-void USocketClient::OnTick()
+void USocketClient::OnReadCallback()
 {
 	if(SocketClient)
 	{
@@ -76,36 +81,58 @@ void USocketClient::OnTick()
 						{
 							break;
 						}
-
-						{
-							const uint8* Pivot = Bytes.GetData();
-
-							uint16 InComePacketSize;
-							std::memcpy(&InComePacketSize, Pivot, PacketTotalSize);
-							// Set Little indian 
-							InComePacketSize = (InComePacketSize << BitSweepSize) | (InComePacketSize >> BitSweepSize);
-
-							Pivot += PacketTotalSize;
-
-							// msg id
-							uint16 InComePacketID;
-							std::memcpy(&InComePacketID, Pivot, PacketMsgIdSize);
-							// Set Little indian
-							InComePacketID = (InComePacketID << BitSweepSize) | (InComePacketID >> BitSweepSize);
-
-							Pivot += PacketMsgIdSize;
-
-							TArray<uint8> PacketData;
-							PacketData.Append(Pivot, Bytes.Num() - PacketTotalSize - PacketMsgIdSize);
-
-							FNetReceiveResult Packet(InComePacketSize, PacketData);
-
-							ReceivedPackets.Enqueue(Packet);
-						}
 						
+						const uint8* Pivot = Bytes.GetData();
+
+						uint16 InComePacketSize;
+						std::memcpy(&InComePacketSize, Pivot, PacketTotalSize);
+						// Set Little indian 
+						InComePacketSize = (InComePacketSize << BitSweepSize) | (InComePacketSize >> BitSweepSize);
+
+						Pivot += PacketTotalSize;
+
+						// msg id
+						uint16 InComePacketID;
+						std::memcpy(&InComePacketID, Pivot, PacketMsgIdSize);
+						// Set Little indian
+						InComePacketID = (InComePacketID << BitSweepSize) | (InComePacketID >> BitSweepSize);
+
+						Pivot += PacketMsgIdSize;
+
+						TArray<uint8> PacketData;
+						PacketData.Append(Pivot, Bytes.Num() - PacketTotalSize - PacketMsgIdSize);
+
+						FNetReceiveResult Packet(InComePacketSize, PacketData);
+
+						ReceivedPackets.Enqueue(Packet);
 					}
+				}
+				else
+				{
+					Close();
 				}
 			}
 		}
+		else 
+		{
+			Close();
+		}
+	}
+}
+
+void USocketClient::SendPacket(const TArray<uint8>& InData) const
+{
+	check(SocketClient, TEXT("Socket is nullptr"), *GetName());
+	check(Listener, TEXT("Listener is nullptr"), *GetName());
+	
+	TArray<uint8> Bytes;
+	FMemoryWriter MemoryWriter(Bytes);
+
+	FString Message = "Send Message";
+	MemoryWriter << Message;
+
+	if(int32 BytesSent = 0; !SocketClient->Send(Bytes.GetData(), Bytes.Num(), BytesSent))
+	{
+		UKismetSystemLibrary::PrintString(GetWorld(), "Unable to send data");
 	}
 }
