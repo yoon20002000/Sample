@@ -13,5 +13,12 @@ UCLASS()
 class SAMPLE_API UBytesBuffer : public UObject
 {
 	GENERATED_BODY()
+public:
+	int32 Tail;
+	int16 PacketSize;
+public:
+	UBytesBuffer();
+
+	void AddData(const TArray<uint8>& InData);
 	
 };
