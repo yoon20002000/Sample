@@ -16,9 +16,11 @@ class SAMPLE_API UGameMessage : public UObject, public IGameMessageBase
 {
 	GENERATED_BODY()
 public:
+	UPROPERTY()
 	EMsgId MsgID;
 protected:
-	UIProtoBufMessage Response;
+	UPROPERTY()
+	UIProtoBufMessage* Response;
 public:
 	virtual void SetData(const TArray<uint8>& InData) override;
 	virtual bool Execute() override;

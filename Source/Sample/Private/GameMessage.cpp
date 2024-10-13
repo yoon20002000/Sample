@@ -5,6 +5,7 @@
 
 void UGameMessage::SetData(const TArray<uint8>& InData)
 {
+	Response->MergeForm(InData);
 }
 
 bool UGameMessage::Execute()
