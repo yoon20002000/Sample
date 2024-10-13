@@ -58,6 +58,9 @@ enum class EMsgId : uint8
 	/// ...
 	///
 };
+
+constexpr int GPacket_Header_Size = sizeof(uint16) + sizeof(uint16) ;
+
 template<typename TEnum>
 FText GetEnumDisplayName(TEnum InEnumValue)
 {

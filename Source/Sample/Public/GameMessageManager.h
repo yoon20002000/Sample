@@ -19,10 +19,13 @@ private:
 	TArray<UGameMessage*> MessageArray;
 	UPROPERTY()
 	TArray<UGameMessage*> NextMessageArray;
-
+	static UGameMessageManager* Instance; 
+	
 public:
-	UGameMessageManager();
+	static UGameMessageManager* GetInstance();
 	void ClearMessages();
 	void ExecuteMessage();
 	void AddMessage(UGameMessage* InMessage);
+private:
+	UGameMessageManager();
 };

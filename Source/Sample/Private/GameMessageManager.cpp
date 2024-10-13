@@ -2,11 +2,21 @@
 
 
 #include "GameMessageManager.h"
-
+UGameMessageManager* UGameMessageManager::Instance = nullptr;
 UGameMessageManager::UGameMessageManager()
 {
 	MessageArray.Reserve(4);
 	NextMessageArray.Reserve(4);
+}
+
+UGameMessageManager* UGameMessageManager::GetInstance()
+{
+	if(Instance == nullptr)
+	{
+		Instance = NewObject<UGameMessageManager>();
+		Instance->AddToRoot();
+	}
+	return Instance;
 }
 
 void UGameMessageManager::ClearMessages()
