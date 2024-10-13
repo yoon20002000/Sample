@@ -23,7 +23,7 @@ private:
 	
 public:
 	static UGameMessageManager* GetInstance();
-	void ClearMessages();
+	void ClearAllMessages();
 	void ExecuteMessage();
 	void AddMessage(UGameMessage* InMessage);
 private:

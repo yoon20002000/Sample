@@ -19,7 +19,7 @@ UGameMessageManager* UGameMessageManager::GetInstance()
 	return Instance;
 }
 
-void UGameMessageManager::ClearMessages()
+void UGameMessageManager::ClearAllMessages()
 {
 	MessageArray.Empty();
 	NextMessageArray.Empty();

@@ -48,8 +48,9 @@ bool USocketClient::Dispatch()
 	return true;
 }
 
-void USocketClient::Close()
+void USocketClient::Close(const ENetworkCloseReason NetCloseReason)
 {
+	NetworkCloseReason = NetCloseReason;
 	if(Listener != nullptr)
 	{
 		Listener.Reset();
@@ -81,6 +82,8 @@ bool USocketClient::OnConnectedCallback(FSocket* InSocket, const FIPv4Endpoint& 
 	UKismetSystemLibrary::PrintString(GetWorld(), "Connected!!");
 
 	bIsConnected = true;
+
+	ConnectedServerId = GetConnectServerIdByPort(InFiPv4Endpoint.Port);
 	
 	// login 요청 추가 필요 
 	

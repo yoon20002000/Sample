@@ -28,13 +28,30 @@ private:
 	const size_t PacketMsgIdSize = sizeof(uint16);
 	unsigned long long BitSweepSize = sizeof(uint8);
 	TQueue<FNetReceiveResult> ReceivedPackets;
-
+	EServerId ConnectedServerId;
 	bool bIsConnected = false;
 	bool bIsLogined = false;
+	ENetworkCloseReason NetworkCloseReason = ENetworkCloseReason::None;
 public:
 	void Connect(const FString& InIpAddress, const int32 InPort);
 	bool Dispatch();
-	void Close();
+	void Close(const ENetworkCloseReason NetCloseReason = ENetworkCloseReason::None);
+	bool IsConnected() const
+	{
+		return bIsConnected;
+	}
+	bool IsLogined() const
+	{
+		return bIsLogined;
+	}
+	EServerId GetConnectedServerId() const
+	{
+		return ConnectedServerId;
+	}
+	ENetworkCloseReason GetNetworkCloseReason() const
+	{
+		return NetworkCloseReason;
+	}
 private:
 	bool OnConnectedCallback(FSocket* InSocket, const FIPv4Endpoint& InFiPv4Endpoint);
 	void OnReadCallback();
