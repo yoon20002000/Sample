@@ -16,13 +16,13 @@ class SAMPLE_API UGameMessageManager : public UObject
 	GENERATED_BODY()
 private:
 	UPROPERTY()
-	TArray<TWeakObjectPtr<UGameMessage>> MessageArray;
+	TArray<UGameMessage*> MessageArray;
 	UPROPERTY()
-	TArray<TWeakObjectPtr<UGameMessage>> NextMessageArray;
+	TArray<UGameMessage*> NextMessageArray;
 
 public:
 	UGameMessageManager();
 	void ClearMessages();
 	void ExecuteMessage();
-	void AddMessage(const TWeakObjectPtr<UGameMessage> InMessage);
+	void AddMessage(UGameMessage* InMessage);
 };

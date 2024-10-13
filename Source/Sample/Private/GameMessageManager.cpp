@@ -22,7 +22,7 @@ void UGameMessageManager::ExecuteMessage()
 		return;
 	}
 
-	for(const TWeakObjectPtr<UGameMessage> Message : MessageArray)
+	for(UGameMessage* Message : MessageArray)
 	{
 		bool bIsProcessed = Message->Execute();
 
@@ -37,7 +37,7 @@ void UGameMessageManager::ExecuteMessage()
 	NextMessageArray.Empty();
 }
 
-void UGameMessageManager::AddMessage(const TWeakObjectPtr<UGameMessage> InMessage)
+void UGameMessageManager::AddMessage(UGameMessage* InMessage)
 {
 	MessageArray.Add(InMessage);
 }
