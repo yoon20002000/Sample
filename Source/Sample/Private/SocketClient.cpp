@@ -2,7 +2,6 @@
 
 
 #include "SocketClient.h"
-
 #include "Common/TcpListener.h"
 #include "Interfaces/IPv4/IPv4Address.h"
 #include "Interfaces/IPv4/IPv4Endpoint.h"
