@@ -9,12 +9,39 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "NetworkDefines.h"
 
-USocketClient::USocketClient() : SocketClient(nullptr), Listener(nullptr), DataBuffer(MakeUnique<UBytesBuffer>()) 
+USocketClient::USocketClient() : SocketClient(nullptr), Listener(nullptr), DataBuffer(NewObject<UBytesBuffer>())
 {
+	
 }
 
 bool USocketClient::Dispatch()
 {
+	check(SocketClient);
+	if(SocketClient == nullptr)
+	{
+		return false;
+	}
+
+	if(ReceivedPackets.IsEmpty() == false)
+	{
+		FNetReceiveResult Result;
+		while (ReceivedPackets.Dequeue(Result))
+		{
+			// IGameMessage Message = SocketNetworkManager.FindPacketMessage(static_cast<EMsgId>(Result.PacketType));
+			// if(Message != nullptr)
+			// {
+			// 	Message.SetData(Result.DataArray);
+			// 	GameMessageManager.Instance.AddMessage(Message);
+			// }
+			// else
+			// {
+			// 	FString ErrorMsg = FString::Format(TEXT("Type: {0}, Length: {1}"), { ,Result.DataArray.Num() });
+			// 	UKismetSystemLibrary::PrintString(GetWorld(), ErrorMsg);
+			// 	break;
+			// }
+		}
+	}
+	
 	return true;
 }
 
@@ -122,8 +149,8 @@ void USocketClient::OnReadCallback()
 
 void USocketClient::SendPacket(const TArray<uint8>& InData) const
 {
-	check(SocketClient, TEXT("Socket is nullptr"), *GetName());
-	check(Listener, TEXT("Listener is nullptr"), *GetName());
+	check(SocketClient);
+	check(Listener);
 	
 	TArray<uint8> Bytes;
 	FMemoryWriter MemoryWriter(Bytes);

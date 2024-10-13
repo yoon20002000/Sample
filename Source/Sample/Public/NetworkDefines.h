@@ -14,6 +14,10 @@ public:
 	int32 PacketType;
 	TArray<uint8> DataArray;
 public:
+	FNetReceiveResult() : PacketType(0)
+	{
+		
+	}
 	FNetReceiveResult(const int32 InPacketType, const TArray<uint8>& InDataArray): PacketType(InPacketType), DataArray(InDataArray)
 	{
 	}
@@ -54,8 +58,14 @@ enum class EMsgId : uint8
 	/// ...
 	///
 };
+template<typename TEnum>
+FText GetEnumDisplayName(TEnum InEnumValue)
+{
+	const UEnum* EnumPtr = StaticEnum<TEnum>();
+	if (!EnumPtr) return FText::GetEmpty();
 
-
+	return EnumPtr->GetDisplayNameTextByValue(static_cast<uint8>(InEnumValue));
+}
 /**
  * 
  */
