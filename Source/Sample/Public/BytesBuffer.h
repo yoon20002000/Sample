@@ -15,10 +15,13 @@ class SAMPLE_API UBytesBuffer : public UObject
 	GENERATED_BODY()
 public:
 	int32 Tail;
-	int16 PacketSize;
+	int16 FrontPacketSize;
+	TArray<uint8> DataBuffer;
+	
 public:
 	UBytesBuffer();
 
 	void AddData(const TArray<uint8>& InData);
-	
+	bool CanProcessPacket();
+	TArray<uint8> GetPacket();
 };
