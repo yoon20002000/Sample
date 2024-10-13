@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "NetworkDefines.h"
 #include "ProtoBufMessage.h"
-#include "UObject/NoExportTypes.h"
 #include "GameMessage.generated.h"
 
 /**
