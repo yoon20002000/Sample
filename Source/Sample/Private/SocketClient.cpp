@@ -96,7 +96,6 @@ bool USocketClient::OnConnectedCallback(FSocket* InSocket, const FIPv4Endpoint& 
 			OnReadCallback();
 		}, 0.1f, true);  
 	
-	// login 요청 추가 필요
 	USocketNetworkManager::GetInstance()->GetAuthHandler()->LoginReq(ConnectedServerId);
 	
 	return true;
