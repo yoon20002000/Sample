@@ -29,6 +29,11 @@ public:
 	int32 Tail;
 	int16 FrontPacketSize;
 	TArray<uint8> DataBuffer;
+
+	FBytesBuffer(): Tail(0), FrontPacketSize(0)
+	{
+		
+	}
 };
 
 UENUM()
