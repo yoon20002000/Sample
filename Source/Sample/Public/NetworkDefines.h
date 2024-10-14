@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "NetworkDefines.generated.h"
 
 USTRUCT()
@@ -47,7 +46,7 @@ enum class EServerId : uint8
 	LandMapServer = 2 UMETA(DisplayName="LandMapServer"),
 };
 UENUM()
-enum class EMsgId : uint8
+enum class EMsgId : uint16
 {
 	None = 0,
 	S_Login_Req = 1 UMETA(DisplayName="S_Login_Req"),
@@ -56,8 +55,9 @@ enum class EMsgId : uint8
 	/// ...
 	///
 };
-
-constexpr int32 GPacket_Header_Size = sizeof(uint16) + sizeof(uint16) ;
+constexpr int32 GPacket_Packet_Size = sizeof(uint16);
+constexpr int32 GPacket_Msg_Size = sizeof(uint16);
+constexpr int32 GPacket_Header_Size = GPacket_Packet_Size + GPacket_Msg_Size;
 constexpr int32 GVillage_Port = 10645;
 constexpr int32 GPlaza_Port = 10245;
 constexpr int32 GLandMap_Port = 10445;
@@ -70,6 +70,20 @@ FText GetEnumDisplayName(TEnum InEnumValue)
 
 	return EnumPtr->GetDisplayNameTextByValue(static_cast<uint8>(InEnumValue));
 }
+template<typename TEnum>
+TEnum StringToEnum(const FString& InEnumName)
+{
+	const UEnum* EnumPtr = StaticEnum<TEnum>();
+
+	int32 EnumValue = EnumPtr->GetIndexByName(FName(*InEnumName));
+	if(EnumValue == INDEX_NONE)
+	{
+		return static_cast<TEnum>(0);
+	}
+
+	return static_cast<TEnum>(EnumValue);
+}
+
 
 inline EServerId GetConnectServerIdByPort(const int32 InPort)
 {

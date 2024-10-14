@@ -3,17 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ProtoBufMessage.h"
-#include "UObject/NoExportTypes.h"
+#include "ProtoBufBase.h"
 #include "C_Login_Res.generated.h"
 
 /**
- * ProtoBuf 대체
+ * 
  */
 UCLASS()
-class SAMPLE_API UC_Login_Res : public UObject, public IProtoBufMessage
+class SAMPLE_API UC_Login_Res : public UProtoBufBase
 {
 	GENERATED_BODY()
 public:
-	virtual void MergeFrom(const TArray<uint8>& Data) override;
+	virtual void MergeFrom(const TArray<uint8>& Data) override ;
+	virtual const FString GetMsgId() override ;
+	virtual int32 CalculateSize() override ;
+	virtual const TArray<uint8>& ToByteArray() override ;
 };

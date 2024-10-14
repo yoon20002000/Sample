@@ -15,8 +15,8 @@ class SAMPLE_API UGameMessageLoginRes : public UGameMessage
 {
 	GENERATED_BODY()
 protected:
-	UPROPERTY()
-	UC_Login_Res* LoginRes;
+ 	UPROPERTY(Transient)
+	TObjectPtr<UC_Login_Res> LoginRes ;
 public:
 	UGameMessageLoginRes();
 	virtual TScriptInterface<IProtoBufMessage> GetProtoBufRes() override
@@ -24,4 +24,5 @@ public:
 		return TScriptInterface<UC_Login_Res>(LoginRes);
 	}
 	virtual bool Execute() override;
+	void Init();
 };

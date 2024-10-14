@@ -4,6 +4,7 @@
 #include "SocketNetworkManager.h"
 
 #include "GameMessageManager.h"
+#include "ProtoBufBase.h"
 #include "SocketPacketHandler.h"
 USocketNetworkManager* USocketNetworkManager::Instance = nullptr;
 
@@ -39,21 +40,21 @@ void USocketNetworkManager::AddHandler(USocketPacketHandler* InSocketPacketHandl
 	PacketHandlersArray.Add(InSocketPacketHandler);
 }
 
-void USocketNetworkManager::Connect(const EServerId InServerId)
+void USocketNetworkManager::Connect(const EServerId InServerId) const
 {
 	const int32 Port = GetConnectServerPortByID(InServerId);
 	Connect(static_cast<int32>(InServerId), GServer_IP, Port);
 }
 
-void USocketNetworkManager::Connect(const FString& InIP, const int32 InPort)
+void USocketNetworkManager::Connect(const FString& InIP, const int32 InPort) const
 {
 	const EServerId ServerId = GetConnectServerIdByPort(InPort);
 	Connect(static_cast<int32>(ServerId), InIP, InPort);
 }
 
-void USocketNetworkManager::Connect(const int32 InServerIndex, const FString& InIP, const int32 InPort)
+void USocketNetworkManager::Connect(const int32 InServerIndex, const FString& InIP, const int32 InPort) const
 {
-	USocketClient* SocketClient = SocketClientsArray[InServerIndex];
+	USocketClient* SocketClient = GetSocketClient(static_cast<EServerId>(InServerIndex));
 	check(SocketClient);
 
 	SocketClient->Connect(InIP, InPort);
@@ -76,12 +77,11 @@ void USocketNetworkManager::OnTick()
 
 		CheckNetworkError();
 	}
-	
 }
 
-void USocketNetworkManager::CloseNetwork(EServerId InServerId, ENetworkCloseReason InNetworkCloseReason)
+void USocketNetworkManager::CloseNetwork(EServerId InServerId, ENetworkCloseReason InNetworkCloseReason) const
 {
-	USocketClient* SocketClient = SocketClientsArray[static_cast<int32>(InServerId)];
+	USocketClient* SocketClient = GetSocketClient(InServerId);
 	check(SocketClient);
 	SocketClient->Close(InNetworkCloseReason);
 }
@@ -99,9 +99,53 @@ void USocketNetworkManager::CloseAllNetworkSockets(const ENetworkCloseReason InN
 
 bool USocketNetworkManager::IsConnectedServer(const EServerId InServerId) const
 {
-	const USocketClient* SocketClient = SocketClientsArray[static_cast<int32>(InServerId)];
-	check(SocketClient);
+	const USocketClient* SocketClient = GetSocketClient(InServerId);
+	
 	return SocketClient->IsConnected();
+}
+
+void USocketNetworkManager::SendPacket(const EServerId InServerId, UProtoBufBase* InMessage)
+{
+	const USocketClient* SocketClient = GetSocketClient(InServerId);
+
+	const FString& PacketMsgId = InMessage->GetMsgId();
+	const EMsgId MsgId = StringToEnum<EMsgId>(PacketMsgId);
+	uint16 MsgIdBytes = static_cast<uint16>(MsgId);
+
+	
+	uint16 MessageSize = InMessage->CalculateSize() + GPacket_Header_Size;
+
+	
+	TArray<uint8> PacketBuffer;
+	PacketBuffer.Reserve(MessageSize + GPacket_Header_Size);
+
+	uint8* Pivot = PacketBuffer.GetData();
+	// packet size
+	// Set big endian
+	// MessageSize = MessageSize << sizeof(uint16) / 2 |  MessageSize >> sizeof(uint16) / 2 ;
+	PacketBuffer.Append(Pivot,NETWORK_ORDER16(MsgIdBytes));
+	Pivot += GPacket_Packet_Size;
+	// msg id
+	// set big endian
+	PacketBuffer.Append(Pivot,NETWORK_ORDER16(MessageSize));
+	Pivot += GPacket_Msg_Size;
+	
+	
+	
+}
+
+void USocketNetworkManager::SendPacketWithConnectCheck(const EServerId InServerId, UProtoBufBase* InMessage)
+{
+	const USocketClient* SocketClient = GetSocketClient(InServerId);
+	
+	if(SocketClient->IsConnected())
+	{
+		SendPacket(InServerId, InMessage);	
+	}
+	else
+	{
+		
+	}
 }
 
 USocketNetworkManager::USocketNetworkManager()
@@ -128,4 +172,11 @@ void USocketNetworkManager::CheckNetworkError()
 		
 		CloseAllNetworkSockets(ENetworkCloseReason::SomeServerError);
 	}
+}
+
+USocketClient* USocketNetworkManager::GetSocketClient(const EServerId InServerId) const
+{
+	USocketClient* SocketClient = SocketClientsArray[static_cast<int32>(InServerId)];
+	check(SocketClient);
+	return SocketClient;
 }

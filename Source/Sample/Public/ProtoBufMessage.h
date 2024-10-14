@@ -23,4 +23,7 @@ class SAMPLE_API IProtoBufMessage
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual void MergeFrom(const TArray<uint8>& Data) = 0;
+	virtual const FString GetMsgId() = 0;
+	virtual int32 CalculateSize() = 0;
+	virtual const TArray<uint8>& ToByteArray() = 0;
 };
