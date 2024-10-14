@@ -6,10 +6,12 @@
 #include "BytesBuffer.h"
 #include "NetworkDefines.h"
 #include "ProtoBufBase.h"
+#include "SocketNetworkManager.h"
 #include "Common/TcpListener.h"
 #include "Interfaces/IPv4/IPv4Endpoint.h"
 #include "UObject/NoExportTypes.h"
 #include "SocketClient.generated.h"
+class USocketNetworkManager;
 /**
  * 
  */
@@ -47,6 +49,18 @@ public:
 	bool IsLogined() const
 	{
 		return bIsLogined;
+	}
+	void SetLogin(bool InbIsLogin)
+	{
+		if(bIsLogined !=InbIsLogin)
+		{
+			bIsLogined = InbIsLogin;
+			if(InbIsLogin == true && IsValid(ReserveMessage) == true)
+			{
+				USocketNetworkManager::GetInstance()->SendPacket(ConnectedServerId, ReserveMessage);
+				ReserveMessage = nullptr;
+			}
+		}
 	}
 	EServerId GetConnectedServerId() const
 	{

@@ -12,9 +12,9 @@
 #include "NetworkDefines.h"
 #include "SocketNetworkManager.h"
 
-USocketClient::USocketClient() : SocketClient(nullptr), Listener(nullptr), DataBuffer(NewObject<UBytesBuffer>())
+USocketClient::USocketClient() : SocketClient(nullptr), Listener(nullptr), DataBuffer(NewObject<UBytesBuffer>()),
+                                 ConnectedServerId(GDefault_ServerId)
 {
-	
 }
 
 bool USocketClient::Dispatch()
@@ -84,8 +84,19 @@ bool USocketClient::OnConnectedCallback(FSocket* InSocket, const FIPv4Endpoint& 
 	bIsConnected = true;
 
 	ConnectedServerId = GetServerIdByPort(InFiPv4Endpoint.Port);
+
+	FTimerHandle WaitDisconnectHandle;
+	GetWorld()->GetTimerManager().SetTimer(WaitDisconnectHandle, [this, &WaitDisconnectHandle]()
+		{
+			if (SocketClient == nullptr ||  IsLogined() == false || IsConnected() == false)
+			{		
+				GetWorld()->GetTimerManager().ClearTimer(WaitDisconnectHandle);
+			}
+			OnReadCallback();
+		}, 0.1f, true);  
 	
-	// login 요청 추가 필요 
+	// login 요청 추가 필요
+	//USocketNetworkManager::GetInstance()->AuthHandler->LoginReq();
 	
 	return true;
 }

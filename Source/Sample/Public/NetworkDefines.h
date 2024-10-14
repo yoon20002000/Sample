@@ -61,6 +61,7 @@ constexpr int32 GPacket_Header_Size = GPacket_Packet_Size + GPacket_Msg_Size;
 constexpr int32 GVillage_Port = 10645;
 constexpr int32 GPlaza_Port = 10245;
 constexpr int32 GLandMap_Port = 10445;
+constexpr EServerId GDefault_ServerId = EServerId::LandMapServer;
 const FString GServer_IP = TEXT("127.0.0.1");
 template<typename TEnum>
 FText GetEnumDisplayName(TEnum InEnumValue)
@@ -100,7 +101,7 @@ inline EServerId GetServerIdByPort(const int32 InPort)
 	case GLandMap_Port:
 	default:
 		{
-			return EServerId::LandMapServer;
+			return GDefault_ServerId;
 		}
 	}
 }

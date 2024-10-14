@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameMessage.h"
 #include "ProtoBufBase.h"
-#include "SocketClient.h"
 #include "UObject/NoExportTypes.h"
 #include "SocketNetworkManager.generated.h"
 
@@ -13,6 +12,7 @@
  * 
  */
 class USocketPacketHandler;
+class USocketClient;
 UCLASS()
 class SAMPLE_API USocketNetworkManager : public UObject
 {

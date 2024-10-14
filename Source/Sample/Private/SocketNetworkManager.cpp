@@ -4,6 +4,7 @@
 #include "SocketNetworkManager.h"
 #include "GameMessageManager.h"
 #include "ProtoBufBase.h"
+#include "SocketClient.h"
 #include "SocketPacketHandler.h"
 TObjectPtr<USocketNetworkManager> USocketNetworkManager::Instance = nullptr;
 
