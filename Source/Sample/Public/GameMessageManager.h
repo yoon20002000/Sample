@@ -19,10 +19,10 @@ private:
 	TArray<UGameMessage*> MessageArray;
 	UPROPERTY(Transient)
 	TArray<UGameMessage*> NextMessageArray;
-	static TObjectPtr<UGameMessageManager> Instance; 
+	static UGameMessageManager* Instance; 
 	
 public:
-	static TObjectPtr<UGameMessageManager> GetInstance();
+	static UGameMessageManager* GetInstance();
 	void ClearAllMessages();
 	void ExecuteMessage();
 	void AddMessage(const TObjectPtr<UGameMessage>& InMessage);

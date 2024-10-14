@@ -70,7 +70,7 @@ public:
 	{
 		return NetworkCloseReason;
 	}
-	void SetReserveMessage(const TObjectPtr<UProtoBufBase>& InMessage)
+	void SetReserveMessage(UProtoBufBase* InMessage)
 	{
 		ReserveMessage = InMessage;	
 	}

@@ -27,9 +27,9 @@ private:
 	TArray<FString> ErrorMsgsArray;
 	TObjectPtr<USocketPacketHandlerAuth> PacketHandlerAuth;
 public:
-	static TObjectPtr<USocketNetworkManager> GetInstance();
-	TObjectPtr<UGameMessage> FindPacketMessage(EMsgId InMsgId);
-	void AddHandler(const TObjectPtr<USocketPacketHandler>& InSocketPacketHandler);
+	static USocketNetworkManager* GetInstance();
+	UGameMessage* FindPacketMessage(EMsgId InMsgId);
+	void AddHandler(USocketPacketHandler* InSocketPacketHandler);
 	void Connect(const EServerId InServerId) const;
 	void Connect(const FString& InIP, const int32 InPort) const;
 	void Connect(const int32 InServerIndex, const FString& InIP, const int32 InPort) const;
@@ -37,11 +37,11 @@ public:
 	void CloseNetwork(EServerId InServerId, ENetworkCloseReason InNetworkCloseReason = ENetworkCloseReason::None) const;
 	void CloseAllNetworkSockets(const ENetworkCloseReason InNetworkCloseReason = ENetworkCloseReason::None);
 	bool IsConnectedServer(const EServerId InServerId) const;
-	void SendPacket(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage) const;
-	void SendPacketWithConnectCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage) const;
-	void SendPacketWithExitCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage) const;
+	void SendPacket(const EServerId InServerId, UProtoBufBase* InMessage) const;
+	void SendPacketWithConnectCheck(const EServerId InServerId, UProtoBufBase* InMessage) const;
+	void SendPacketWithExitCheck(const EServerId InServerId, UProtoBufBase* InMessage) const;
 	
-	TObjectPtr<USocketPacketHandlerAuth> GetAuthHandler()
+	USocketPacketHandlerAuth* GetAuthHandler()
 	{
 		return PacketHandlerAuth;
 	}

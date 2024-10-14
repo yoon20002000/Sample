@@ -2,14 +2,14 @@
 
 
 #include "GameMessageManager.h"
-TObjectPtr<UGameMessageManager> UGameMessageManager::Instance = nullptr;
+UGameMessageManager* UGameMessageManager::Instance = nullptr;
 UGameMessageManager::UGameMessageManager()
 {
 	MessageArray.Reserve(4);
 	NextMessageArray.Reserve(4);
 }
 
-TObjectPtr<UGameMessageManager> UGameMessageManager::GetInstance()
+UGameMessageManager* UGameMessageManager::GetInstance()
 {
 	if(Instance == nullptr)
 	{

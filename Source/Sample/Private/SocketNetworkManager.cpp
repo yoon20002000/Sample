@@ -9,7 +9,7 @@
 #include "SocketPacketHandlerAuth.h"
 TObjectPtr<USocketNetworkManager> USocketNetworkManager::Instance = nullptr;
 
-TObjectPtr<USocketNetworkManager> USocketNetworkManager::GetInstance()
+USocketNetworkManager* USocketNetworkManager::GetInstance()
 {
 	if(Instance == nullptr)
 	{
@@ -19,7 +19,7 @@ TObjectPtr<USocketNetworkManager> USocketNetworkManager::GetInstance()
 	return Instance;
 }
 
-TObjectPtr<UGameMessage> USocketNetworkManager::FindPacketMessage(const EMsgId InMsgId)
+UGameMessage* USocketNetworkManager::FindPacketMessage(const EMsgId InMsgId)
 {
 	TObjectPtr<UGameMessage> Message = nullptr;
 
@@ -36,7 +36,7 @@ TObjectPtr<UGameMessage> USocketNetworkManager::FindPacketMessage(const EMsgId I
 	return Message;
 }
 
-void USocketNetworkManager::AddHandler(const TObjectPtr<USocketPacketHandler>& InSocketPacketHandler)
+void USocketNetworkManager::AddHandler(USocketPacketHandler* InSocketPacketHandler)
 {
 	PacketHandlersArray.Add(InSocketPacketHandler);
 }
@@ -105,7 +105,7 @@ bool USocketNetworkManager::IsConnectedServer(const EServerId InServerId) const
 	return SocketClient->IsConnected();
 }
 
-void USocketNetworkManager::SendPacket(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage) const
+void USocketNetworkManager::SendPacket(const EServerId InServerId, UProtoBufBase* InMessage) const
 {
 	const TObjectPtr<USocketClient> SocketClient = GetSocketClient(InServerId);
 
@@ -133,7 +133,7 @@ void USocketNetworkManager::SendPacket(const EServerId InServerId, const TObject
 	SocketClient->SendPacket(PacketBuffer);
 }
 
-void USocketNetworkManager::SendPacketWithConnectCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage) const
+void USocketNetworkManager::SendPacketWithConnectCheck(const EServerId InServerId, UProtoBufBase* InMessage) const
 {
 	const TObjectPtr<USocketClient> SocketClient = GetSocketClient(InServerId);
 	
@@ -148,7 +148,7 @@ void USocketNetworkManager::SendPacketWithConnectCheck(const EServerId InServerI
 	}
 }
 
-void USocketNetworkManager::SendPacketWithExitCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage) const
+void USocketNetworkManager::SendPacketWithExitCheck(const EServerId InServerId, UProtoBufBase* InMessage) const
 {
 	const TObjectPtr<USocketClient> SocketClient = GetSocketClient(InServerId);
 	int32 Port = GetServerPortByID(InServerId);
