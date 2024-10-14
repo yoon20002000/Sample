@@ -15,7 +15,7 @@ class SAMPLE_API UGameMessage : public UObject
 {
 	GENERATED_BODY()
 protected:
-	UPROPERTY()
+	UPROPERTY(Transient)
 	EMsgId MsgID = EMsgId::None;
 public:
 	EMsgId GetMsgID() const { return MsgID; }

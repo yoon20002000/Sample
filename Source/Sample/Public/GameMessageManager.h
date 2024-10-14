@@ -15,9 +15,9 @@ class SAMPLE_API UGameMessageManager : public UObject
 {
 	GENERATED_BODY()
 private:
-	UPROPERTY()
+	UPROPERTY(Transient)
 	TArray<UGameMessage*> MessageArray;
-	UPROPERTY()
+	UPROPERTY(Transient)
 	TArray<UGameMessage*> NextMessageArray;
 	static TObjectPtr<UGameMessageManager> Instance; 
 	

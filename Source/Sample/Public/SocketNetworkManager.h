@@ -20,9 +20,9 @@ class SAMPLE_API USocketNetworkManager : public UObject
 	GENERATED_BODY()
 private:
 	static TObjectPtr<USocketNetworkManager> Instance;
-	UPROPERTY()
+	UPROPERTY(Transient)
 	TArray<TObjectPtr<USocketPacketHandler>> PacketHandlersArray;
-	UPROPERTY()
+	UPROPERTY(Transient)
 	TArray<TObjectPtr<USocketClient>> SocketClientsArray;
 	TArray<FString> ErrorMsgsArray;
 	TObjectPtr<USocketPacketHandlerAuth> PacketHandlerAuth;
