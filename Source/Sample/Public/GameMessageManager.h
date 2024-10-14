@@ -19,7 +19,7 @@ private:
 	TArray<UGameMessage*> MessageArray;
 	UPROPERTY()
 	TArray<UGameMessage*> NextMessageArray;
-	static UGameMessageManager* Instance; 
+	static TObjectPtr<UGameMessageManager> Instance; 
 	
 public:
 	static TObjectPtr<UGameMessageManager> GetInstance();

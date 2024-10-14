@@ -2,7 +2,7 @@
 
 
 #include "GameMessageManager.h"
-UGameMessageManager* UGameMessageManager::Instance = nullptr;
+TObjectPtr<UGameMessageManager> UGameMessageManager::Instance = nullptr;
 UGameMessageManager::UGameMessageManager()
 {
 	MessageArray.Reserve(4);
@@ -32,7 +32,7 @@ void UGameMessageManager::ExecuteMessage()
 		return;
 	}
 
-	for(UGameMessage* Message : MessageArray)
+	for(const TObjectPtr<UGameMessage> Message : MessageArray)
 	{
 		bool bIsProcessed = Message->Execute();
 

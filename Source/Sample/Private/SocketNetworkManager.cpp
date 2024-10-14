@@ -21,7 +21,7 @@ TObjectPtr<USocketNetworkManager> USocketNetworkManager::GetInstance()
 
 TObjectPtr<UGameMessage> USocketNetworkManager::FindPacketMessage(const EMsgId InMsgId)
 {
-	UGameMessage* Message = nullptr;
+	TObjectPtr<UGameMessage> Message = nullptr;
 
 	for (const TObjectPtr<USocketPacketHandler> PacketHandler : PacketHandlersArray)
 	{
@@ -36,7 +36,7 @@ TObjectPtr<UGameMessage> USocketNetworkManager::FindPacketMessage(const EMsgId I
 	return Message;
 }
 
-void USocketNetworkManager::AddHandler(USocketPacketHandler* InSocketPacketHandler)
+void USocketNetworkManager::AddHandler(const TObjectPtr<USocketPacketHandler>& InSocketPacketHandler)
 {
 	PacketHandlersArray.Add(InSocketPacketHandler);
 }
@@ -63,7 +63,7 @@ void USocketNetworkManager::Connect(const int32 InServerIndex, const FString& In
 
 void USocketNetworkManager::OnTick()
 {
-	for (USocketClient* SocketClient : SocketClientsArray)
+	for (TObjectPtr<USocketClient> SocketClient : SocketClientsArray)
 	{
 		if(SocketClient == nullptr || SocketClient->IsConnected() == false)
 		{
@@ -82,14 +82,14 @@ void USocketNetworkManager::OnTick()
 
 void USocketNetworkManager::CloseNetwork(EServerId InServerId, ENetworkCloseReason InNetworkCloseReason) const
 {
-	USocketClient* SocketClient = GetSocketClient(InServerId);
+	const TObjectPtr<USocketClient> SocketClient = GetSocketClient(InServerId);
 	check(SocketClient);
 	SocketClient->Close(InNetworkCloseReason);
 }
 
 void USocketNetworkManager::CloseAllNetworkSockets(const ENetworkCloseReason InNetworkCloseReason)
 {
-	for (USocketClient* SocketClient : SocketClientsArray)
+	for (TObjectPtr<USocketClient> SocketClient : SocketClientsArray)
 	{
 		if(SocketClient)
 		{
@@ -100,14 +100,14 @@ void USocketNetworkManager::CloseAllNetworkSockets(const ENetworkCloseReason InN
 
 bool USocketNetworkManager::IsConnectedServer(const EServerId InServerId) const
 {
-	const USocketClient* SocketClient = GetSocketClient(InServerId);
+	const TObjectPtr<USocketClient> SocketClient = GetSocketClient(InServerId);
 	
 	return SocketClient->IsConnected();
 }
 
 void USocketNetworkManager::SendPacket(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage) const
 {
-	const USocketClient* SocketClient = GetSocketClient(InServerId);
+	const TObjectPtr<USocketClient> SocketClient = GetSocketClient(InServerId);
 
 	const FString& PacketMsgId = InMessage->GetMsgId();
 	const EMsgId MsgId = StringToEnum<EMsgId>(PacketMsgId);

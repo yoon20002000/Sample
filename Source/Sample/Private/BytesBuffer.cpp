@@ -9,7 +9,7 @@ UBytesBuffer::UBytesBuffer() : Tail(0), FrontPacketSize(0)
 
 void UBytesBuffer::AddData(const TArray<uint8>& InData)
 {
-	int32 DataSize = InData.Num();
+	const int32 DataSize = InData.Num();
 
 	DataBuffer.Append(InData.GetData(), DataSize);
 

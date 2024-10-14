@@ -29,7 +29,7 @@ private:
 public:
 	static TObjectPtr<USocketNetworkManager> GetInstance();
 	TObjectPtr<UGameMessage> FindPacketMessage(EMsgId InMsgId);
-	void AddHandler(USocketPacketHandler* InSocketPacketHandler);
+	void AddHandler(const TObjectPtr<USocketPacketHandler>& InSocketPacketHandler);
 	void Connect(const EServerId InServerId) const;
 	void Connect(const FString& InIP, const int32 InPort) const;
 	void Connect(const int32 InServerIndex, const FString& InIP, const int32 InPort) const;

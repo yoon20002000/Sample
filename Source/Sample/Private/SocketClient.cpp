@@ -31,7 +31,7 @@ bool USocketClient::Dispatch()
 		FNetReceiveResult Result;
 		while (ReceivedPackets.Dequeue(Result))
 		{
-			UGameMessage* Message = USocketNetworkManager::GetInstance()->FindPacketMessage(static_cast<EMsgId>(Result.PacketType));
+			TObjectPtr<UGameMessage> Message = USocketNetworkManager::GetInstance()->FindPacketMessage(static_cast<EMsgId>(Result.PacketType));
 			if(Message != nullptr)
 			{
 				Message->SetData(Result.DataArray);
