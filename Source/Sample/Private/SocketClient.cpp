@@ -13,8 +13,7 @@
 #include "SocketNetworkManager.h"
 #include "SocketPacketHandlerAuth.h"
 
-USocketClient::USocketClient() : SocketClient(nullptr), Listener(nullptr), DataBuffer(CreateDefaultSubobject<UBytesBuffer>(TEXT("Root"))),
-                                 ConnectedServerId(GDefault_ServerId)
+USocketClient::USocketClient() : SocketClient(nullptr), Listener(nullptr), ConnectedServerId(GDefault_ServerId)
 {
 }
 
@@ -115,11 +114,11 @@ void USocketClient::OnReadCallback()
 				int32 BytesRead = 0;
 				if(SocketClient->Recv(Bytes.GetData(), PendingData,BytesRead))
 				{
-					DataBuffer->AddData(Bytes);
+					AddData(Bytes);
 
 					while (true)
 					{
-						if(DataBuffer->CanProcessPacket())
+						if(CanProcessPacket())
 						{
 							break;
 						}
@@ -161,6 +160,36 @@ void USocketClient::OnReadCallback()
 		}
 	}
 }
+
+void USocketClient::AddData(const TArray<uint8>& InDataBuffer)
+{
+	SocketBuffer.DataBuffer.Append(InDataBuffer);
+	SocketBuffer.Tail += InDataBuffer.Num();
+}
+
+bool USocketClient::CanProcessPacket()
+{
+	uint16 PacketSize = 0;
+
+	FMemory::Memcpy(&PacketSize,SocketBuffer.DataBuffer.GetData(),sizeof(uint16_t));
+	
+	return SocketBuffer.Tail >= PacketSize;
+}
+
+TArray<uint8> USocketClient::GetPacket()
+{
+	const int32 FrontPacketSize = SocketBuffer.FrontPacketSize;
+	
+	TArray<uint8> Packet;
+	Packet.Reserve(FrontPacketSize);
+	Packet.Append(SocketBuffer.DataBuffer.GetData(), FrontPacketSize);
+	SocketBuffer.DataBuffer.RemoveAt(0, FrontPacketSize);
+
+	SocketBuffer.Tail -= FrontPacketSize;
+	return Packet;
+
+}
+
 void USocketClient::SendPacket(const TArray<uint8>& InData) const
 {
 	check(SocketClient);

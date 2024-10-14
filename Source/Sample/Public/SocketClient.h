@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BytesBuffer.h"
 #include "NetworkDefines.h"
 #include "ProtoBufBase.h"
 #include "SocketNetworkManager.h"
@@ -26,7 +25,7 @@ private:
 	TUniquePtr<FTcpListener> Listener;
 	const uint32 BufferSize = 1024 * 8 * 2;
 	UPROPERTY()
-	TObjectPtr<UBytesBuffer>  DataBuffer;
+	FBytesBuffer SocketBuffer;
 	const size_t PacketTotalSize = sizeof(uint16);
 	const size_t PacketMsgIdSize = sizeof(uint16);
 	unsigned long long BitSweepSize = sizeof(uint8);
@@ -77,4 +76,7 @@ public:
 private:
 	bool OnConnectedCallback(FSocket* InSocket, const FIPv4Endpoint& InFiPv4Endpoint);
 	void OnReadCallback();
+	void AddData(const TArray<uint8>& InDataBuffer);
+	bool CanProcessPacket();
+	TArray<uint8> GetPacket();
 };
