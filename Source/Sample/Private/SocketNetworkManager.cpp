@@ -133,7 +133,7 @@ void USocketNetworkManager::SendPacket(const EServerId InServerId, const TObject
 	SocketClient->SendPacket(PacketBuffer);
 }
 
-void USocketNetworkManager::SendPacketWithConnectCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage)
+void USocketNetworkManager::SendPacketWithConnectCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage) const
 {
 	const TObjectPtr<USocketClient> SocketClient = GetSocketClient(InServerId);
 	
@@ -143,13 +143,12 @@ void USocketNetworkManager::SendPacketWithConnectCheck(const EServerId InServerI
 	}
 	else
 	{
-		int32 Port = GetServerPortByID(InServerId);
 		SocketClient->SetReserveMessage(InMessage);
 		Connect(InServerId);
 	}
 }
 
-void USocketNetworkManager::SendPacketWithExitCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage)
+void USocketNetworkManager::SendPacketWithExitCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage) const
 {
 	const TObjectPtr<USocketClient> SocketClient = GetSocketClient(InServerId);
 	int32 Port = GetServerPortByID(InServerId);
@@ -197,10 +196,11 @@ void USocketNetworkManager::ExitNConnect(const FString& InIP, const int32 InPort
 	// Send Logout
 	// Common.SendExit();
 	EServerId ServerID = GetServerIdByPort(InPort);
-	TObjectPtr<USocketClient> SocketClient = GetSocketClient(ServerID);
+	
 	FTimerHandle WaitDisconnectHandle;
-	GetWorld()->GetTimerManager().SetTimer(WaitDisconnectHandle, [this, SocketClient, ServerID, InIP, InPort, &WaitDisconnectHandle]()
+	GetWorld()->GetTimerManager().SetTimer(WaitDisconnectHandle, [this, ServerID, InIP, InPort, &WaitDisconnectHandle]()
 		{
+			const TObjectPtr<USocketClient> SocketClient = GetSocketClient(ServerID);
 			if (SocketClient && !SocketClient->IsConnected())
 			{		
 				GetWorld()->GetTimerManager().ClearTimer(WaitDisconnectHandle);

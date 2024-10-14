@@ -127,7 +127,7 @@ void USocketClient::OnReadCallback()
 						const uint8* Pivot = Bytes.GetData();
 
 						uint16 InComePacketSize;
-						std::memcpy(&InComePacketSize, Pivot, PacketTotalSize);
+						FMemory::Memcpy(&InComePacketSize, Pivot, PacketTotalSize);
 						// Set Little endian 
 						InComePacketSize = (InComePacketSize << BitSweepSize) | (InComePacketSize >> BitSweepSize);
 
@@ -135,7 +135,7 @@ void USocketClient::OnReadCallback()
 
 						// msg id
 						uint16 InComePacketID;
-						std::memcpy(&InComePacketID, Pivot, PacketMsgIdSize);
+						FMemory::Memcpy(&InComePacketID, Pivot, PacketMsgIdSize);
 						// Set Little endian
 						InComePacketID = (InComePacketID << BitSweepSize) | (InComePacketID >> BitSweepSize);
 

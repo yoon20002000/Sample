@@ -38,8 +38,8 @@ public:
 	void CloseAllNetworkSockets(const ENetworkCloseReason InNetworkCloseReason = ENetworkCloseReason::None);
 	bool IsConnectedServer(const EServerId InServerId) const;
 	void SendPacket(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage) const;
-	void SendPacketWithConnectCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage);
-	void SendPacketWithExitCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage);
+	void SendPacketWithConnectCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage) const;
+	void SendPacketWithExitCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage) const;
 	
 	TObjectPtr<USocketPacketHandlerAuth> GetAuthHandler()
 	{

@@ -19,7 +19,8 @@ void UBytesBuffer::AddData(const TArray<uint8>& InData)
 bool UBytesBuffer::CanProcessPacket()
 {
 	uint16 PacketSize = 0;
-	std::memcpy(&PacketSize, DataBuffer.GetData(), sizeof(uint16_t));
+
+	FMemory::Memcpy(&PacketSize,DataBuffer.GetData(),sizeof(uint16_t));
 	return Tail >= PacketSize;
 }
 
