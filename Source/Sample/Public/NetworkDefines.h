@@ -61,7 +61,7 @@ constexpr int32 GPacket_Header_Size = sizeof(uint16) + sizeof(uint16) ;
 constexpr int32 GVillage_Port = 10645;
 constexpr int32 GPlaza_Port = 10245;
 constexpr int32 GLandMap_Port = 10445;
-constexpr  FString GServer_IP = "127.0.0.1";
+const FString GServer_IP = TEXT("127.0.0.1");
 template<typename TEnum>
 FText GetEnumDisplayName(TEnum InEnumValue)
 {

@@ -7,10 +7,12 @@
     <projectFile>Intermediate/ProjectFiles/Sample.vcxproj</projectFile>
     <projectFile>Intermediate/ProjectFiles/UE5.vcxproj</projectFile>
   </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="d416e4ad-64f6-4d65-8336-f954f4693c5c" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Sample/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Sample/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Sample/Public/GameMessage.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Sample/Public/GameMessage.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Sample/Public/NetworkDefines.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Sample/Public/NetworkDefines.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,16 +36,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;C++ 프로젝트.Sample.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "C++ 프로젝트.Sample.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="C++ 프로젝트.Sample">
     <configuration name="Sample" type="CppProject" factoryName="C++ Project">
       <configuration_1>
@@ -485,6 +491,7 @@
       <workItem from="1728809359441" duration="200000" />
       <workItem from="1728809590314" duration="5000" />
       <workItem from="1728809606435" duration="267000" />
+      <workItem from="1728866616833" duration="447000" />
     </task>
     <servers />
   </component>
