@@ -83,7 +83,7 @@ bool USocketClient::OnConnectedCallback(FSocket* InSocket, const FIPv4Endpoint& 
 
 	bIsConnected = true;
 
-	ConnectedServerId = GetConnectServerIdByPort(InFiPv4Endpoint.Port);
+	ConnectedServerId = GetServerIdByPort(InFiPv4Endpoint.Port);
 	
 	// login 요청 추가 필요 
 	
@@ -150,7 +150,6 @@ void USocketClient::OnReadCallback()
 		}
 	}
 }
-
 void USocketClient::SendPacket(const TArray<uint8>& InData) const
 {
 	check(SocketClient);

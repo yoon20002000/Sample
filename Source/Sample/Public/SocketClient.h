@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BytesBuffer.h"
 #include "NetworkDefines.h"
+#include "ProtoBufBase.h"
 #include "Common/TcpListener.h"
 #include "Interfaces/IPv4/IPv4Endpoint.h"
 #include "UObject/NoExportTypes.h"
@@ -32,6 +33,8 @@ private:
 	bool bIsConnected = false;
 	bool bIsLogined = false;
 	ENetworkCloseReason NetworkCloseReason = ENetworkCloseReason::None;
+	UPROPERTY(Transient)
+	TObjectPtr<UProtoBufBase> ReserveMessage;
 public:
 	void Connect(const FString& InIpAddress, const int32 InPort);
 	void SendPacket(const TArray<uint8>& InData) const;
@@ -52,6 +55,10 @@ public:
 	ENetworkCloseReason GetNetworkCloseReason() const
 	{
 		return NetworkCloseReason;
+	}
+	void SetReserveMessage(const TObjectPtr<UProtoBufBase>& InMessage)
+	{
+		ReserveMessage = InMessage;	
 	}
 private:
 	bool OnConnectedCallback(FSocket* InSocket, const FIPv4Endpoint& InFiPv4Endpoint);

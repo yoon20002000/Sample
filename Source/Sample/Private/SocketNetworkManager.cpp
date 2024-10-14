@@ -41,19 +41,19 @@ void USocketNetworkManager::AddHandler(USocketPacketHandler* InSocketPacketHandl
 
 void USocketNetworkManager::Connect(const EServerId InServerId) const
 {
-	const int32 Port = GetConnectServerPortByID(InServerId);
+	const int32 Port = GetServerPortByID(InServerId);
 	Connect(static_cast<int32>(InServerId), GServer_IP, Port);
 }
 
 void USocketNetworkManager::Connect(const FString& InIP, const int32 InPort) const
 {
-	const EServerId ServerId = GetConnectServerIdByPort(InPort);
+	const EServerId ServerId = GetServerIdByPort(InPort);
 	Connect(static_cast<int32>(ServerId), InIP, InPort);
 }
 
 void USocketNetworkManager::Connect(const int32 InServerIndex, const FString& InIP, const int32 InPort) const
 {
-	TObjectPtr<USocketClient> SocketClient = GetSocketClient(static_cast<EServerId>(InServerIndex));
+	const TObjectPtr<USocketClient> SocketClient = GetSocketClient(static_cast<EServerId>(InServerIndex));
 	check(SocketClient);
 
 	SocketClient->Connect(InIP, InPort);
@@ -103,7 +103,7 @@ bool USocketNetworkManager::IsConnectedServer(const EServerId InServerId) const
 	return SocketClient->IsConnected();
 }
 
-void USocketNetworkManager::SendPacket(const EServerId InServerId, UProtoBufBase* InMessage) const
+void USocketNetworkManager::SendPacket(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage) const
 {
 	const USocketClient* SocketClient = GetSocketClient(InServerId);
 
@@ -131,9 +131,9 @@ void USocketNetworkManager::SendPacket(const EServerId InServerId, UProtoBufBase
 	SocketClient->SendPacket(PacketBuffer);
 }
 
-void USocketNetworkManager::SendPacketWithConnectCheck(const EServerId InServerId, UProtoBufBase* InMessage)
+void USocketNetworkManager::SendPacketWithConnectCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage)
 {
-	const USocketClient* SocketClient = GetSocketClient(InServerId);
+	const TObjectPtr<USocketClient> SocketClient = GetSocketClient(InServerId);
 	
 	if(SocketClient->IsConnected())
 	{
@@ -141,7 +141,19 @@ void USocketNetworkManager::SendPacketWithConnectCheck(const EServerId InServerI
 	}
 	else
 	{
-		
+		int32 Port = GetServerPortByID(InServerId);
+		SocketClient->SetReserveMessage(InMessage);
+		Connect(InServerId);
+	}
+}
+
+void USocketNetworkManager::SendPacketWithExitCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage)
+{
+	const TObjectPtr<USocketClient> SocketClient = GetSocketClient(InServerId);
+	int32 Port = GetServerPortByID(InServerId);
+	if(SocketClient->IsLogined())
+	{
+		Async(EAsyncExecution::Thread, [this, Port](){ExitNConnect(GServer_IP,Port);});
 	}
 }
 
@@ -152,7 +164,7 @@ USocketNetworkManager::USocketNetworkManager()
 void USocketNetworkManager::CheckNetworkError()
 {
 	bool bIsSomeServerClosedByError = false;
-	for (const USocketClient* SocketClient : SocketClientsArray)
+	for (const TObjectPtr<USocketClient> SocketClient : SocketClientsArray)
 	{
 		if(SocketClient->IsConnected() == false && SocketClient->GetNetworkCloseReason() != ENetworkCloseReason::None)
 		{
@@ -176,6 +188,38 @@ TObjectPtr<USocketClient> USocketNetworkManager::GetSocketClient(const EServerId
 	TObjectPtr<USocketClient> SocketClient = SocketClientsArray[static_cast<int32>(InServerId)];
 	check(SocketClient);
 	return SocketClient;
+}
+
+void USocketNetworkManager::ExitNConnect(const FString& InIP, const int32 InPort) const
+{
+	// Send Logout
+	// Common.SendExit();
+	EServerId ServerID = GetServerIdByPort(InPort);
+	TObjectPtr<USocketClient> SocketClient = GetSocketClient(ServerID);
+	FTimerHandle WaitDisconnectHandle;
+	GetWorld()->GetTimerManager().SetTimer(WaitDisconnectHandle, [this, SocketClient, ServerID, InIP, InPort, &WaitDisconnectHandle]()
+		{
+			if (SocketClient && !SocketClient->IsConnected())
+			{		
+				GetWorld()->GetTimerManager().ClearTimer(WaitDisconnectHandle);
+                         	
+				Connect(InIP, InPort);
+			}
+		}, 0.1f, true);  
+}
+
+void USocketNetworkManager::BeginDestroy()
+{
+	UObject::BeginDestroy();
+
+	for (const TObjectPtr<USocketClient> SocketClient : SocketClientsArray)
+	{
+		if(SocketClient == nullptr)
+		{
+			continue;
+		}
+		SocketClient->Close(ENetworkCloseReason::QuitGame);
+	}
 }
 
 TArray<uint8> USocketNetworkManager::ConvertSendBytes(const uint16 InData)

@@ -85,7 +85,7 @@ TEnum StringToEnum(const FString& InEnumName)
 }
 
 
-inline EServerId GetConnectServerIdByPort(const int32 InPort)
+inline EServerId GetServerIdByPort(const int32 InPort)
 {
 	switch (InPort)
 	{
@@ -104,7 +104,7 @@ inline EServerId GetConnectServerIdByPort(const int32 InPort)
 		}
 	}
 }
-inline int32 GetConnectServerPortByID(const EServerId InServerId)
+inline int32 GetServerPortByID(const EServerId InServerId)
 {
 	switch (InServerId)
 	{

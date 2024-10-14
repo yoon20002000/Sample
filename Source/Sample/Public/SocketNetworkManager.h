@@ -35,11 +35,15 @@ public:
 	void CloseNetwork(EServerId InServerId, ENetworkCloseReason InNetworkCloseReason = ENetworkCloseReason::None) const;
 	void CloseAllNetworkSockets(const ENetworkCloseReason InNetworkCloseReason = ENetworkCloseReason::None);
 	bool IsConnectedServer(const EServerId InServerId) const;
-	void SendPacket(const EServerId InServerId, UProtoBufBase* InMessage) const;
-	void SendPacketWithConnectCheck(const EServerId InServerId, UProtoBufBase* InMessage);
+	void SendPacket(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage) const;
+	void SendPacketWithConnectCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage);
+	void SendPacketWithExitCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage);
+
 private:
 	static TArray<uint8> ConvertSendBytes(const uint16 InData);
 	USocketNetworkManager();
 	void CheckNetworkError();
 	TObjectPtr<USocketClient> GetSocketClient(const EServerId InServerId) const;
+	void ExitNConnect(const FString& InIP, const int32 InPort) const;
+	virtual void BeginDestroy() override;
 };
