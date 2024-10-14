@@ -3,6 +3,7 @@
 
 #include "SocketPacketHandlerAuth.h"
 #include "GameMessageLoginRes.h"
+#include "S_Login_Req.h"
 
 UGameMessage* USocketPacketHandlerAuth::FindPacketMessage(const EMsgId InMsgId)
 {
@@ -20,4 +21,11 @@ UGameMessage* USocketPacketHandlerAuth::FindPacketMessage(const EMsgId InMsgId)
 			break;
 		}
 	}
+}
+
+void USocketPacketHandlerAuth::LoginReq(const EServerId InServerId)
+{
+	const TObjectPtr<US_Login_Req> LoginReq = NewObject<US_Login_Req>();
+
+	USocketNetworkManager::GetInstance()->SendPacket(InServerId, LoginReq);
 }

@@ -8,6 +8,7 @@
 #include "UObject/NoExportTypes.h"
 #include "SocketNetworkManager.generated.h"
 
+class USocketPacketHandlerAuth;
 /**
  * 
  */
@@ -24,6 +25,7 @@ private:
 	UPROPERTY()
 	TArray<TObjectPtr<USocketClient>> SocketClientsArray;
 	TArray<FString> ErrorMsgsArray;
+	TObjectPtr<USocketPacketHandlerAuth> PacketHandlerAuth;
 public:
 	static TObjectPtr<USocketNetworkManager> GetInstance();
 	TObjectPtr<UGameMessage> FindPacketMessage(EMsgId InMsgId);
@@ -38,7 +40,12 @@ public:
 	void SendPacket(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage) const;
 	void SendPacketWithConnectCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage);
 	void SendPacketWithExitCheck(const EServerId InServerId, const TObjectPtr<UProtoBufBase>& InMessage);
-
+	
+	TObjectPtr<USocketPacketHandlerAuth> GetAuthHandler()
+	{
+		return PacketHandlerAuth;
+	}
+	
 private:
 	static TArray<uint8> ConvertSendBytes(const uint16 InData);
 	USocketNetworkManager();
@@ -46,4 +53,5 @@ private:
 	TObjectPtr<USocketClient> GetSocketClient(const EServerId InServerId) const;
 	void ExitNConnect(const FString& InIP, const int32 InPort) const;
 	virtual void BeginDestroy() override;
+	void Initialize();
 };

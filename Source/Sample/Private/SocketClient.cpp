@@ -11,6 +11,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "NetworkDefines.h"
 #include "SocketNetworkManager.h"
+#include "SocketPacketHandlerAuth.h"
 
 USocketClient::USocketClient() : SocketClient(nullptr), Listener(nullptr), DataBuffer(NewObject<UBytesBuffer>()),
                                  ConnectedServerId(GDefault_ServerId)
@@ -96,7 +97,7 @@ bool USocketClient::OnConnectedCallback(FSocket* InSocket, const FIPv4Endpoint& 
 		}, 0.1f, true);  
 	
 	// login 요청 추가 필요
-	//USocketNetworkManager::GetInstance()->AuthHandler->LoginReq();
+	USocketNetworkManager::GetInstance()->GetAuthHandler()->LoginReq(ConnectedServerId);
 	
 	return true;
 }

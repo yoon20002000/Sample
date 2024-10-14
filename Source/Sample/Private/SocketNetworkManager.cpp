@@ -6,6 +6,7 @@
 #include "ProtoBufBase.h"
 #include "SocketClient.h"
 #include "SocketPacketHandler.h"
+#include "SocketPacketHandlerAuth.h"
 TObjectPtr<USocketNetworkManager> USocketNetworkManager::Instance = nullptr;
 
 TObjectPtr<USocketNetworkManager> USocketNetworkManager::GetInstance()
@@ -221,6 +222,11 @@ void USocketNetworkManager::BeginDestroy()
 		}
 		SocketClient->Close(ENetworkCloseReason::QuitGame);
 	}
+}
+
+void USocketNetworkManager::Initialize()
+{
+	PacketHandlerAuth = NewObject<USocketPacketHandlerAuth>();
 }
 
 TArray<uint8> USocketNetworkManager::ConvertSendBytes(const uint16 InData)
