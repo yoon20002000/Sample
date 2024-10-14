@@ -22,10 +22,10 @@ private:
 	static UGameMessageManager* Instance; 
 	
 public:
-	static UGameMessageManager* GetInstance();
+	static TObjectPtr<UGameMessageManager> GetInstance();
 	void ClearAllMessages();
 	void ExecuteMessage();
-	void AddMessage(UGameMessage* InMessage);
+	void AddMessage(const TObjectPtr<UGameMessage>& InMessage);
 private:
 	UGameMessageManager();
 };

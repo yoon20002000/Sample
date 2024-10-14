@@ -9,7 +9,7 @@ UGameMessageManager::UGameMessageManager()
 	NextMessageArray.Reserve(4);
 }
 
-UGameMessageManager* UGameMessageManager::GetInstance()
+TObjectPtr<UGameMessageManager> UGameMessageManager::GetInstance()
 {
 	if(Instance == nullptr)
 	{
@@ -47,7 +47,7 @@ void UGameMessageManager::ExecuteMessage()
 	NextMessageArray.Empty();
 }
 
-void UGameMessageManager::AddMessage(UGameMessage* InMessage)
+void UGameMessageManager::AddMessage(const TObjectPtr<UGameMessage>& InMessage)
 {
 	MessageArray.Add(InMessage);
 }

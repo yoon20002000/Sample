@@ -84,8 +84,6 @@ TEnum StringToEnum(const FString& InEnumName)
 
 	return static_cast<TEnum>(EnumValue);
 }
-
-
 inline EServerId GetServerIdByPort(const int32 InPort)
 {
 	switch (InPort)
@@ -133,7 +131,5 @@ class SAMPLE_API UNetworkDefines : public UObject
 {
 	GENERATED_BODY()
 public:
-	
-	
 	
 };

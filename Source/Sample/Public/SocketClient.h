@@ -26,7 +26,7 @@ private:
 	TUniquePtr<FTcpListener> Listener;
 	const uint32 BufferSize = 1024 * 8 * 2;
 	UPROPERTY()
-	UBytesBuffer* DataBuffer;
+	TObjectPtr<UBytesBuffer>  DataBuffer;
 	const size_t PacketTotalSize = sizeof(uint16);
 	const size_t PacketMsgIdSize = sizeof(uint16);
 	unsigned long long BitSweepSize = sizeof(uint8);

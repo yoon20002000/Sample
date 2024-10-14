@@ -5,7 +5,7 @@
 #include "GameMessageLoginRes.h"
 #include "S_Login_Req.h"
 
-UGameMessage* USocketPacketHandlerAuth::FindPacketMessage(const EMsgId InMsgId)
+TObjectPtr<UGameMessage> USocketPacketHandlerAuth::FindPacketMessage(const EMsgId InMsgId)
 {
 	switch (InMsgId)
 	{

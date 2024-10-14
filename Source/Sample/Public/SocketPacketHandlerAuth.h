@@ -14,6 +14,6 @@ class SAMPLE_API USocketPacketHandlerAuth : public USocketPacketHandler
 {
 	GENERATED_BODY()
 public:
-	virtual UGameMessage* FindPacketMessage(const EMsgId InMsgId) override;
+	virtual TObjectPtr<UGameMessage> FindPacketMessage(const EMsgId InMsgId) override;
 	static void LoginReq(const EServerId InServerId);
 };
