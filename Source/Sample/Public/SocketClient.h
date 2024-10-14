@@ -34,6 +34,7 @@ private:
 	ENetworkCloseReason NetworkCloseReason = ENetworkCloseReason::None;
 public:
 	void Connect(const FString& InIpAddress, const int32 InPort);
+	void SendPacket(const TArray<uint8>& InData) const;
 	bool Dispatch();
 	void Close(const ENetworkCloseReason NetCloseReason = ENetworkCloseReason::None);
 	bool IsConnected() const
@@ -55,5 +56,4 @@ public:
 private:
 	bool OnConnectedCallback(FSocket* InSocket, const FIPv4Endpoint& InFiPv4Endpoint);
 	void OnReadCallback();
-	void SendPacket(const TArray<uint8>& InData) const;
 };

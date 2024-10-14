@@ -18,15 +18,15 @@ class SAMPLE_API USocketNetworkManager : public UObject
 {
 	GENERATED_BODY()
 private:
-	static USocketNetworkManager* Instance;
+	static TObjectPtr<USocketNetworkManager> Instance;
 	UPROPERTY()
-	TArray<USocketPacketHandler*> PacketHandlersArray;
+	TArray<TObjectPtr<USocketPacketHandler>> PacketHandlersArray;
 	UPROPERTY()
-	TArray<USocketClient*> SocketClientsArray;
+	TArray<TObjectPtr<USocketClient>> SocketClientsArray;
 	TArray<FString> ErrorMsgsArray;
 public:
-	static USocketNetworkManager* GetInstance();
-	UGameMessage* FindPacketMessage(EMsgId InMsgId);
+	static TObjectPtr<USocketNetworkManager> GetInstance();
+	TObjectPtr<UGameMessage> FindPacketMessage(EMsgId InMsgId);
 	void AddHandler(USocketPacketHandler* InSocketPacketHandler);
 	void Connect(const EServerId InServerId) const;
 	void Connect(const FString& InIP, const int32 InPort) const;
@@ -35,10 +35,11 @@ public:
 	void CloseNetwork(EServerId InServerId, ENetworkCloseReason InNetworkCloseReason = ENetworkCloseReason::None) const;
 	void CloseAllNetworkSockets(const ENetworkCloseReason InNetworkCloseReason = ENetworkCloseReason::None);
 	bool IsConnectedServer(const EServerId InServerId) const;
-	void SendPacket(const EServerId InServerId, UProtoBufBase* InMessage);
+	void SendPacket(const EServerId InServerId, UProtoBufBase* InMessage) const;
 	void SendPacketWithConnectCheck(const EServerId InServerId, UProtoBufBase* InMessage);
 private:
+	static TArray<uint8> ConvertSendBytes(const uint16 InData);
 	USocketNetworkManager();
 	void CheckNetworkError();
-	USocketClient* GetSocketClient(const EServerId InServerId) const;
+	TObjectPtr<USocketClient> GetSocketClient(const EServerId InServerId) const;
 };

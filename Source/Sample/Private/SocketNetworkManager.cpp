@@ -2,13 +2,12 @@
 
 
 #include "SocketNetworkManager.h"
-
 #include "GameMessageManager.h"
 #include "ProtoBufBase.h"
 #include "SocketPacketHandler.h"
-USocketNetworkManager* USocketNetworkManager::Instance = nullptr;
+TObjectPtr<USocketNetworkManager> USocketNetworkManager::Instance = nullptr;
 
-USocketNetworkManager* USocketNetworkManager::GetInstance()
+TObjectPtr<USocketNetworkManager> USocketNetworkManager::GetInstance()
 {
 	if(Instance == nullptr)
 	{
@@ -18,11 +17,11 @@ USocketNetworkManager* USocketNetworkManager::GetInstance()
 	return Instance;
 }
 
-UGameMessage* USocketNetworkManager::FindPacketMessage(const EMsgId InMsgId)
+TObjectPtr<UGameMessage> USocketNetworkManager::FindPacketMessage(const EMsgId InMsgId)
 {
 	UGameMessage* Message = nullptr;
 
-	for (USocketPacketHandler* PacketHandler : PacketHandlersArray)
+	for (const TObjectPtr<USocketPacketHandler> PacketHandler : PacketHandlersArray)
 	{
 		Message = PacketHandler->FindPacketMessage(InMsgId);
 		if(Message != nullptr)
@@ -54,7 +53,7 @@ void USocketNetworkManager::Connect(const FString& InIP, const int32 InPort) con
 
 void USocketNetworkManager::Connect(const int32 InServerIndex, const FString& InIP, const int32 InPort) const
 {
-	USocketClient* SocketClient = GetSocketClient(static_cast<EServerId>(InServerIndex));
+	TObjectPtr<USocketClient> SocketClient = GetSocketClient(static_cast<EServerId>(InServerIndex));
 	check(SocketClient);
 
 	SocketClient->Connect(InIP, InPort);
@@ -104,34 +103,32 @@ bool USocketNetworkManager::IsConnectedServer(const EServerId InServerId) const
 	return SocketClient->IsConnected();
 }
 
-void USocketNetworkManager::SendPacket(const EServerId InServerId, UProtoBufBase* InMessage)
+void USocketNetworkManager::SendPacket(const EServerId InServerId, UProtoBufBase* InMessage) const
 {
 	const USocketClient* SocketClient = GetSocketClient(InServerId);
 
 	const FString& PacketMsgId = InMessage->GetMsgId();
 	const EMsgId MsgId = StringToEnum<EMsgId>(PacketMsgId);
 	uint16 MsgIdBytes = static_cast<uint16>(MsgId);
-
+	// Set big endian
+	MsgIdBytes = NETWORK_ORDER16(MsgIdBytes);
 	
-	uint16 MessageSize = InMessage->CalculateSize() + GPacket_Header_Size;
-
+	uint16 TotalPacketSize = InMessage->CalculateSize() + GPacket_Header_Size;
+	// set big endian
+	TotalPacketSize = NETWORK_ORDER16(TotalPacketSize);
 	
 	TArray<uint8> PacketBuffer;
-	PacketBuffer.Reserve(MessageSize + GPacket_Header_Size);
+	PacketBuffer.Reserve(TotalPacketSize + GPacket_Header_Size);
+	
+	const TArray<uint8> TotalPacketSizeBytes = ConvertSendBytes(TotalPacketSize);
+	PacketBuffer.Append(TotalPacketSizeBytes);
+	
+	const TArray<uint8> SendMsgIdBytes = ConvertSendBytes(MsgIdBytes);
+	PacketBuffer.Append(SendMsgIdBytes);
+	
+	PacketBuffer.Append(InMessage->ToByteArray());
 
-	uint8* Pivot = PacketBuffer.GetData();
-	// packet size
-	// Set big endian
-	// MessageSize = MessageSize << sizeof(uint16) / 2 |  MessageSize >> sizeof(uint16) / 2 ;
-	PacketBuffer.Append(Pivot,NETWORK_ORDER16(MsgIdBytes));
-	Pivot += GPacket_Packet_Size;
-	// msg id
-	// set big endian
-	PacketBuffer.Append(Pivot,NETWORK_ORDER16(MessageSize));
-	Pivot += GPacket_Msg_Size;
-	
-	
-	
+	SocketClient->SendPacket(PacketBuffer);
 }
 
 void USocketNetworkManager::SendPacketWithConnectCheck(const EServerId InServerId, UProtoBufBase* InMessage)
@@ -155,7 +152,7 @@ USocketNetworkManager::USocketNetworkManager()
 void USocketNetworkManager::CheckNetworkError()
 {
 	bool bIsSomeServerClosedByError = false;
-	for (USocketClient* SocketClient : SocketClientsArray)
+	for (const USocketClient* SocketClient : SocketClientsArray)
 	{
 		if(SocketClient->IsConnected() == false && SocketClient->GetNetworkCloseReason() != ENetworkCloseReason::None)
 		{
@@ -174,9 +171,18 @@ void USocketNetworkManager::CheckNetworkError()
 	}
 }
 
-USocketClient* USocketNetworkManager::GetSocketClient(const EServerId InServerId) const
+TObjectPtr<USocketClient> USocketNetworkManager::GetSocketClient(const EServerId InServerId) const
 {
-	USocketClient* SocketClient = SocketClientsArray[static_cast<int32>(InServerId)];
+	TObjectPtr<USocketClient> SocketClient = SocketClientsArray[static_cast<int32>(InServerId)];
 	check(SocketClient);
 	return SocketClient;
+}
+
+TArray<uint8> USocketNetworkManager::ConvertSendBytes(const uint16 InData)
+{
+	TArray<uint8> PacketBuffer;
+	PacketBuffer.Reserve(2);
+	PacketBuffer.Add(static_cast<uint8>(InData & 0xFF));
+	PacketBuffer.Add(static_cast<uint8>((InData >> 8) & 0xFF));
+	return PacketBuffer;
 }
