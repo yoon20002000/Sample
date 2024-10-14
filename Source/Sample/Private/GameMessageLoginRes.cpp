@@ -4,7 +4,7 @@
 #include "GameMessageLoginRes.h"
 
 
-UGameMessageLoginRes::UGameMessageLoginRes() : LoginRes(nullptr)
+UGameMessageLoginRes::UGameMessageLoginRes() : LoginRes(CreateDefaultSubobject<UC_Login_Res>(TEXT("Root")))
 {
 }
 
@@ -12,9 +12,4 @@ bool UGameMessageLoginRes::Execute()
 {
 	// Set  Server Login
 	return true;
-}
-
-void UGameMessageLoginRes::Init()
-{
-	LoginRes = NewObject<UC_Login_Res>();
 }

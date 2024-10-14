@@ -24,5 +24,4 @@ public:
 		return TScriptInterface<UC_Login_Res>(LoginRes);
 	}
 	virtual bool Execute() override;
-	void Init();
 };

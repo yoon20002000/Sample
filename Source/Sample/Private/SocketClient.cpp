@@ -13,7 +13,7 @@
 #include "SocketNetworkManager.h"
 #include "SocketPacketHandlerAuth.h"
 
-USocketClient::USocketClient() : SocketClient(nullptr), Listener(nullptr), DataBuffer(NewObject<UBytesBuffer>()),
+USocketClient::USocketClient() : SocketClient(nullptr), Listener(nullptr), DataBuffer(CreateDefaultSubobject<UBytesBuffer>(TEXT("Root"))),
                                  ConnectedServerId(GDefault_ServerId)
 {
 }
