@@ -21,6 +21,15 @@ public:
 	{
 	}
 };
+USTRUCT()
+struct FBytesBuffer
+{
+	GENERATED_BODY()
+public:
+	int32 Tail;
+	int16 FrontPacketSize;
+	TArray<uint8> DataBuffer;
+};
 
 UENUM()
 enum class ENetworkCloseReason : uint16
