@@ -9,7 +9,8 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
-				"CoreUObject"
+				"CoreUObject",
+				"ModelViewViewModel"
 			]
 		}
 	],
@@ -20,6 +21,10 @@
 			"TargetAllowList": [
 				"Editor"
 			]
+		},
+		{
+			"Name": "ModelViewViewModel",
+			"Enabled": true
 		}
 	]
 }

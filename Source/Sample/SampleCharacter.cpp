@@ -11,8 +11,6 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 
-DEFINE_LOG_CATEGORY(LogTemplateCharacter);
-
 //////////////////////////////////////////////////////////////////////////
 // ASampleCharacter
 
@@ -85,11 +83,11 @@ void ASampleCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASampleCharacter::Move);
 
 		// Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASampleCharacter::Look);
+		//EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASampleCharacter::Look);
 	}
 	else
 	{
-		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+		UE_LOG(LogTemp, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
 }
 
