@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameMessage.h"
+#include "FGameMessage.h"
 #include "UObject/NoExportTypes.h"
 #include "GameMessageManager.generated.h"
 
@@ -15,17 +15,15 @@ class SAMPLE_API UGameMessageManager : public UObject
 {
 	GENERATED_BODY()
 private:
-	UPROPERTY(Transient)
-	TArray<UGameMessage*> MessageArray;
-	UPROPERTY(Transient)
-	TArray<UGameMessage*> NextMessageArray;
+	TArray<TSharedPtr<FGameMessage>> MessageArray;
+	TArray<TSharedPtr<FGameMessage>> NextMessageArray;
 	static UGameMessageManager* Instance; 
 	
 public:
 	static UGameMessageManager* GetInstance();
 	void ClearAllMessages();
 	void ExecuteMessage();
-	void AddMessage(const TObjectPtr<UGameMessage>& InMessage);
+	void AddMessage(const TSharedPtr<FGameMessage>& InMessage);
 private:
 	UGameMessageManager();
 };

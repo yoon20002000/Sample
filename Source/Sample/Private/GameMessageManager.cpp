@@ -32,13 +32,13 @@ void UGameMessageManager::ExecuteMessage()
 		return;
 	}
 
-	for(const TObjectPtr<UGameMessage> Message : MessageArray)
+	for(const TSharedPtr<FGameMessage> Message : MessageArray)
 	{
 		bool bIsProcessed = Message->Execute();
 
 		if (!bIsProcessed)
 		{
-			UE_LOG(LogTemp, Error, TEXT("return is false : %s"), *Message->GetClass()->GetName());
+			UE_LOG(LogTemp, Error, TEXT("return is false : %s"), *GetEnumDisplayName(Message->GetMsgID()).ToString());
 		}
 	}
 
@@ -47,7 +47,7 @@ void UGameMessageManager::ExecuteMessage()
 	NextMessageArray.Empty();
 }
 
-void UGameMessageManager::AddMessage(const TObjectPtr<UGameMessage>& InMessage)
+void UGameMessageManager::AddMessage(const TSharedPtr<FGameMessage>& InMessage)
 {
 	MessageArray.Add(InMessage);
 }

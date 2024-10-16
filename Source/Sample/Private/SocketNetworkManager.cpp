@@ -3,7 +3,6 @@
 
 #include "SocketNetworkManager.h"
 #include "GameMessageManager.h"
-#include "ProtoBufBase.h"
 #include "SocketClient.h"
 #include "SocketPacketHandler.h"
 #include "SocketPacketHandlerAuth.h"
@@ -19,14 +18,14 @@ USocketNetworkManager* USocketNetworkManager::GetInstance()
 	return Instance;
 }
 
-UGameMessage* USocketNetworkManager::FindPacketMessage(const EMsgId InMsgId)
+TSharedPtr<FGameMessage> USocketNetworkManager::FindPacketMessage(const EMsgId InMsgId)
 {
-	TObjectPtr<UGameMessage> Message = nullptr;
+	TSharedPtr<FGameMessage> Message = nullptr;
 
 	for (const TObjectPtr<USocketPacketHandler> PacketHandler : PacketHandlersArray)
 	{
 		Message = PacketHandler->FindPacketMessage(InMsgId);
-		if(Message != nullptr)
+		if(Message.IsValid())
 		{
 			Message->SetMsgID(InMsgId);
 			break;
@@ -105,10 +104,10 @@ bool USocketNetworkManager::IsConnectedServer(const EServerId InServerId) const
 	return SocketClient->IsConnected();
 }
 
-void USocketNetworkManager::SendPacket(const EServerId InServerId, UProtoBufBase* InMessage) const
+void USocketNetworkManager::SendPacket(const EServerId InServerId, const TSharedPtr<IMessage>& InMessage) const
 {
 	const TObjectPtr<USocketClient> SocketClient = GetSocketClient(InServerId);
-
+	
 	const FString& PacketMsgId = InMessage->GetMsgId();
 	const EMsgId MsgId = StringToEnum<EMsgId>(PacketMsgId);
 	uint16 MsgIdBytes = static_cast<uint16>(MsgId);
@@ -133,7 +132,7 @@ void USocketNetworkManager::SendPacket(const EServerId InServerId, UProtoBufBase
 	SocketClient->SendPacket(PacketBuffer);
 }
 
-void USocketNetworkManager::SendPacketWithConnectCheck(const EServerId InServerId, UProtoBufBase* InMessage) const
+void USocketNetworkManager::SendPacketWithConnectCheck(const EServerId InServerId, const TSharedPtr<IMessage>& InMessage) const
 {
 	const TObjectPtr<USocketClient> SocketClient = GetSocketClient(InServerId);
 	
@@ -148,7 +147,7 @@ void USocketNetworkManager::SendPacketWithConnectCheck(const EServerId InServerI
 	}
 }
 
-void USocketNetworkManager::SendPacketWithExitCheck(const EServerId InServerId, UProtoBufBase* InMessage) const
+void USocketNetworkManager::SendPacketWithExitCheck(const EServerId InServerId, const TSharedPtr<IMessage>& InMessage) const
 {
 	const TObjectPtr<USocketClient> SocketClient = GetSocketClient(InServerId);
 	int32 Port = GetServerPortByID(InServerId);

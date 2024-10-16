@@ -1,8 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ProtoBufBase.h"
+#include "IMessage.h"
 
-UProtoBufBase::UProtoBufBase()
+IMessage::IMessage()
+{
+}
+
+IMessage::~IMessage()
 {
 }

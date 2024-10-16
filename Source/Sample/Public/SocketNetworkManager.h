@@ -3,8 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameMessage.h"
-#include "ProtoBufBase.h"
+#include "FGameMessage.h"
 #include "UObject/NoExportTypes.h"
 #include "SocketNetworkManager.generated.h"
 
@@ -28,7 +27,7 @@ private:
 	TObjectPtr<USocketPacketHandlerAuth> PacketHandlerAuth;
 public:
 	static USocketNetworkManager* GetInstance();
-	UGameMessage* FindPacketMessage(EMsgId InMsgId);
+	TSharedPtr<FGameMessage> FindPacketMessage(EMsgId InMsgId);
 	void AddHandler(USocketPacketHandler* InSocketPacketHandler);
 	void Connect(const EServerId InServerId) const;
 	void Connect(const FString& InIP, const int32 InPort) const;
@@ -37,9 +36,9 @@ public:
 	void CloseNetwork(EServerId InServerId, ENetworkCloseReason InNetworkCloseReason = ENetworkCloseReason::None) const;
 	void CloseAllNetworkSockets(const ENetworkCloseReason InNetworkCloseReason = ENetworkCloseReason::None);
 	bool IsConnectedServer(const EServerId InServerId) const;
-	void SendPacket(const EServerId InServerId, UProtoBufBase* InMessage) const;
-	void SendPacketWithConnectCheck(const EServerId InServerId, UProtoBufBase* InMessage) const;
-	void SendPacketWithExitCheck(const EServerId InServerId, UProtoBufBase* InMessage) const;
+	void SendPacket(const EServerId InServerId, const TSharedPtr<IMessage>& InMessage) const;
+	void SendPacketWithConnectCheck(const EServerId InServerId, const TSharedPtr<IMessage>& InMessage) const;
+	void SendPacketWithExitCheck(const EServerId InServerId, const TSharedPtr<IMessage>& InMessage) const;
 	
 	USocketPacketHandlerAuth* GetAuthHandler()
 	{

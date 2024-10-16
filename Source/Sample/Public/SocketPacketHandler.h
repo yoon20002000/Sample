@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameMessage.h"
 #include "SocketNetworkManager.h"
 #include "UObject/NoExportTypes.h"
 #include "SocketPacketHandler.generated.h"
@@ -20,5 +19,5 @@ public:
 	{
 		USocketNetworkManager::GetInstance()->AddHandler(this);
 	}
-	virtual  UGameMessage* FindPacketMessage(const EMsgId InMsgId) PURE_VIRTUAL(USocketPacketHandler::FindPacketMessage, return nullptr;);
+	virtual  TSharedPtr<FGameMessage> FindPacketMessage(const EMsgId InMsgId) PURE_VIRTUAL(USocketPacketHandler::FindPacketMessage, return nullptr;);
 };

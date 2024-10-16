@@ -4,23 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "NetworkDefines.h"
-#include "ProtoBufMessage.h"
-#include "GameMessage.generated.h"
 
+class IMessage;
 /**
  * 
  */
-UCLASS(Abstract)
-class SAMPLE_API UGameMessage : public UObject
+class SAMPLE_API FGameMessage
 {
-	GENERATED_BODY()
 protected:
-	UPROPERTY(Transient)
 	EMsgId MsgID = EMsgId::None;
+	TSharedPtr<IMessage> ResMessage; 
 public:
+	FGameMessage();
+	virtual ~FGameMessage();
+	
 	EMsgId GetMsgID() const { return MsgID; }
 	void SetMsgID(const EMsgId InMsgId) { MsgID = InMsgId; }
 	virtual void SetData(const TArray<uint8>& InData);
-	virtual bool Execute() PURE_VIRTUAL(UGameMessage::Execute, return true;);
-	virtual TScriptInterface<IProtoBufMessage> GetProtoBufRes() PURE_VIRTUAL(UGameMessage::GetProtoBufRes, return nullptr ;);
+	virtual bool Execute() = 0;
 };

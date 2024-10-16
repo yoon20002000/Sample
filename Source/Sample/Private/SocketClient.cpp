@@ -2,8 +2,6 @@
 
 
 #include "SocketClient.h"
-
-#include "GameMessage.h"
 #include "GameMessageManager.h"
 #include "Common/TcpListener.h"
 #include "Interfaces/IPv4/IPv4Address.h"
@@ -30,7 +28,7 @@ bool USocketClient::Dispatch()
 		FNetReceiveResult Result;
 		while (ReceivedPackets.Dequeue(Result))
 		{
-			TObjectPtr<UGameMessage> Message = USocketNetworkManager::GetInstance()->FindPacketMessage(static_cast<EMsgId>(Result.PacketType));
+			TSharedPtr<FGameMessage> Message = USocketNetworkManager::GetInstance()->FindPacketMessage(static_cast<EMsgId>(Result.PacketType));
 			if(Message != nullptr)
 			{
 				Message->SetData(Result.DataArray);

@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "IMessage.h"
 #include "NetworkDefines.h"
-#include "ProtoBufBase.h"
 #include "SocketNetworkManager.h"
 #include "Common/TcpListener.h"
 #include "Interfaces/IPv4/IPv4Endpoint.h"
@@ -34,8 +34,7 @@ private:
 	bool bIsConnected = false;
 	bool bIsLogined = false;
 	ENetworkCloseReason NetworkCloseReason = ENetworkCloseReason::None;
-	UPROPERTY(Transient)
-	TObjectPtr<UProtoBufBase> ReserveMessage;
+	TSharedPtr<IMessage> ReserveMessage;
 public:
 	void Connect(const FString& InIpAddress, const int32 InPort);
 	void SendPacket(const TArray<uint8>& InData) const;
@@ -54,7 +53,7 @@ public:
 		if(bIsLogined !=InbIsLogin)
 		{
 			bIsLogined = InbIsLogin;
-			if(InbIsLogin == true && IsValid(ReserveMessage) == true)
+			if(InbIsLogin == true && ReserveMessage.IsValid() == true)
 			{
 				USocketNetworkManager::GetInstance()->SendPacket(ConnectedServerId, ReserveMessage);
 				ReserveMessage = nullptr;
@@ -69,7 +68,7 @@ public:
 	{
 		return NetworkCloseReason;
 	}
-	void SetReserveMessage(UProtoBufBase* InMessage)
+	void SetReserveMessage(const TSharedPtr<IMessage>& InMessage)
 	{
 		ReserveMessage = InMessage;	
 	}

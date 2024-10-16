@@ -2,10 +2,10 @@
 
 
 #include "SocketPacketHandlerAuth.h"
-#include "GameMessageLoginRes.h"
-#include "S_Login_Req.h"
+#include "FGameMessageLoginRes.h"
+#include "FSLoginReq.h"
 
-UGameMessage* USocketPacketHandlerAuth::FindPacketMessage(const EMsgId InMsgId)
+TSharedPtr<FGameMessage> USocketPacketHandlerAuth::FindPacketMessage(const EMsgId InMsgId)
 {
 	switch (InMsgId)
 	{
@@ -17,7 +17,7 @@ UGameMessage* USocketPacketHandlerAuth::FindPacketMessage(const EMsgId InMsgId)
 		}
 	case EMsgId::C_Login_Res:
 		{
-			return NewObject<UGameMessageLoginRes>();
+			return MakeShareable(new FGameMessageLoginRes());
 			break;
 		}
 	}
@@ -25,7 +25,7 @@ UGameMessage* USocketPacketHandlerAuth::FindPacketMessage(const EMsgId InMsgId)
 
 void USocketPacketHandlerAuth::LoginReq(const EServerId InServerId)
 {
-	const TObjectPtr<US_Login_Req> LoginReq = NewObject<US_Login_Req>();
+	const TSharedPtr<FSLoginReq> LoginReq = MakeShareable(new FSLoginReq(InServerId));
 
 	USocketNetworkManager::GetInstance()->SendPacket(InServerId, LoginReq);
 }
