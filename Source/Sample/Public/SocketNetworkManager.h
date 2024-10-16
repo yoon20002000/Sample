@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FGameMessage.h"
+#include "GameMessage.h"
 #include "UObject/NoExportTypes.h"
 #include "SocketNetworkManager.generated.h"
 
@@ -27,7 +27,7 @@ private:
 	TObjectPtr<USocketPacketHandlerAuth> PacketHandlerAuth;
 public:
 	static USocketNetworkManager* GetInstance();
-	TSharedPtr<FGameMessage> FindPacketMessage(EMsgId InMsgId);
+	TSharedPtr<GameMessage> FindPacketMessage(EMsgId InMsgId);
 	void AddHandler(USocketPacketHandler* InSocketPacketHandler);
 	void Connect(const EServerId InServerId) const;
 	void Connect(const FString& InIP, const int32 InPort) const;

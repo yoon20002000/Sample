@@ -18,9 +18,9 @@ USocketNetworkManager* USocketNetworkManager::GetInstance()
 	return Instance;
 }
 
-TSharedPtr<FGameMessage> USocketNetworkManager::FindPacketMessage(const EMsgId InMsgId)
+TSharedPtr<GameMessage> USocketNetworkManager::FindPacketMessage(const EMsgId InMsgId)
 {
-	TSharedPtr<FGameMessage> Message = nullptr;
+	TSharedPtr<GameMessage> Message = nullptr;
 
 	for (const TObjectPtr<USocketPacketHandler> PacketHandler : PacketHandlersArray)
 	{

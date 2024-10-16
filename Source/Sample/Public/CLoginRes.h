@@ -5,18 +5,14 @@
 #include "CoreMinimal.h"
 #include "IMessage.h"
 
-enum class EServerId : uint8;
 /**
  * 
  */
-class SAMPLE_API FSLoginReq final : public IMessage
+class SAMPLE_API CLoginRes : public IMessage
 {
-private:
-	EServerId ServerId;
 public:
-	FSLoginReq(const EServerId InServerId);
-	virtual ~FSLoginReq() override;
-	
+	CLoginRes();
+	virtual ~CLoginRes() override;
 	virtual void MergeFrom(const TArray<uint8>& InData) override;
 	virtual const FString GetMsgId() override;
 	virtual int32 CalculateSize() override;

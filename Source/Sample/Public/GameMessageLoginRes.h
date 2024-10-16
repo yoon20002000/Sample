@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FGameMessage.h"
+#include "GameMessage.h"
 
-class FCLoginRes;
+class CLoginRes;
 /**
  * 
  */
-class SAMPLE_API FGameMessageLoginRes final : public FGameMessage
+class SAMPLE_API GameMessageLoginRes final : public GameMessage
 {
 public:
-	FGameMessageLoginRes();
-	virtual ~FGameMessageLoginRes() override;
+	GameMessageLoginRes();
+	virtual ~GameMessageLoginRes() override;
 
 	virtual bool Execute() override;
 };

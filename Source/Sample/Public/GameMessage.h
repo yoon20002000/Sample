@@ -9,14 +9,14 @@ class IMessage;
 /**
  * 
  */
-class SAMPLE_API FGameMessage
+class SAMPLE_API GameMessage
 {
 protected:
 	EMsgId MsgID = EMsgId::None;
 	TSharedPtr<IMessage> ResMessage; 
 public:
-	FGameMessage();
-	virtual ~FGameMessage();
+	GameMessage();
+	virtual ~GameMessage();
 	
 	EMsgId GetMsgID() const { return MsgID; }
 	void SetMsgID(const EMsgId InMsgId) { MsgID = InMsgId; }

@@ -19,5 +19,5 @@ public:
 	{
 		USocketNetworkManager::GetInstance()->AddHandler(this);
 	}
-	virtual  TSharedPtr<FGameMessage> FindPacketMessage(const EMsgId InMsgId) PURE_VIRTUAL(USocketPacketHandler::FindPacketMessage, return nullptr;);
+	virtual  TSharedPtr<GameMessage> FindPacketMessage(const EMsgId InMsgId) PURE_VIRTUAL(USocketPacketHandler::FindPacketMessage, return nullptr;);
 };

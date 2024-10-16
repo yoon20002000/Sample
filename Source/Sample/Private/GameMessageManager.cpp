@@ -32,7 +32,7 @@ void UGameMessageManager::ExecuteMessage()
 		return;
 	}
 
-	for(const TSharedPtr<FGameMessage> Message : MessageArray)
+	for(const TSharedPtr<GameMessage> Message : MessageArray)
 	{
 		bool bIsProcessed = Message->Execute();
 
@@ -47,7 +47,7 @@ void UGameMessageManager::ExecuteMessage()
 	NextMessageArray.Empty();
 }
 
-void UGameMessageManager::AddMessage(const TSharedPtr<FGameMessage>& InMessage)
+void UGameMessageManager::AddMessage(const TSharedPtr<GameMessage>& InMessage)
 {
 	MessageArray.Add(InMessage);
 }

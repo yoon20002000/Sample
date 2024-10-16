@@ -28,8 +28,8 @@ bool USocketClient::Dispatch()
 		FNetReceiveResult Result;
 		while (ReceivedPackets.Dequeue(Result))
 		{
-			TSharedPtr<FGameMessage> Message = USocketNetworkManager::GetInstance()->FindPacketMessage(static_cast<EMsgId>(Result.PacketType));
-			if(Message != nullptr)
+			TSharedPtr<GameMessage> Message = USocketNetworkManager::GetInstance()->FindPacketMessage(static_cast<EMsgId>(Result.PacketType));
+			if(Message.IsValid())
 			{
 				Message->SetData(Result.DataArray);
 				UGameMessageManager::GetInstance()->AddMessage(Message);
