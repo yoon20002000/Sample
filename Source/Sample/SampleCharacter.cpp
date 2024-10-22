@@ -83,7 +83,10 @@ void ASampleCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASampleCharacter::Move);
 
 		// Looking
-		//EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASampleCharacter::Look);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASampleCharacter::Look);
+		
+		// Crouching
+		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &ASampleCharacter::Crouching);
 	}
 	else
 	{
@@ -124,5 +127,16 @@ void ASampleCharacter::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+void ASampleCharacter::Crouching(const FInputActionValue& Value)
+{
+	if(bIsCrouched == true)
+	{
+		UnCrouch();	
+	}
+	else
+	{
+		Crouch();
 	}
 }

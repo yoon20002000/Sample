@@ -41,6 +41,9 @@ class ASampleCharacter : public ACharacter
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
+	/** Crouch Input Action*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+    UInputAction* CrouchAction;
 
 public:
 	ASampleCharacter();
@@ -54,6 +57,7 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 			
+	void Crouching(const FInputActionValue& Value);
 
 protected:
 	// APawn interface
